@@ -1,4 +1,4 @@
-name: X79/C600 Vulkan Ivy
+name: Build Vulkan x79_c600
 
 on:
 workflow_dispatch:
