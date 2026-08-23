@@ -33,11 +33,6 @@
 
 #define ASYNCIO_CONCURRENCY 64
 
-// X79/C600 Vulkan build: hard-target NVIDIA Ampere / RTX 3070.
-// Keep generic shaders for non-matmul operations, but generate matmul
-// families through NV_coopmat2 when the SDK supports it.
-#define GGML_VULKAN_X79_AMPERE_ONLY 1
-
 std::mutex lock;
 std::vector<std::pair<std::string, std::string>> shader_fnames;
 // Set when any shader subprocess fails (non-zero exit / stderr / launch failure) so the
