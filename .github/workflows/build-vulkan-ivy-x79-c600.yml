@@ -1,4 +1,4 @@
-name: Vulkan Ivy X79/C600
+name: X79/C600 Vulkan Ivy
 
 on:
 workflow_dispatch:
@@ -19,7 +19,6 @@ jobs:
 windows-vulkan-ivy:
 runs-on: windows-2025
 
-```
 steps:
   - name: Clone
     uses: actions/checkout@v6
@@ -71,6 +70,7 @@ steps:
         -D GGML_F16C=ON `
         -D GGML_AVX2=OFF `
         -D GGML_BMI2=OFF `
+        -D GGML_FMA=OFF `
         -D GGML_AVX512=OFF `
         -D GGML_AVX512_VBMI=OFF `
         -D GGML_AVX512_VNNI=OFF `
@@ -159,6 +159,4 @@ steps:
     uses: actions/upload-artifact@v6
     with:
       name: x79-c600-vulkan-ivy
-      path: |
-        x79-c600-vulkan-ivy-windows-x64.zip
-```
+      path: x79-c600-vulkan-ivy-windows-x64.zip
