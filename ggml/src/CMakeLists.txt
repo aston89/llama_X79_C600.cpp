@@ -480,6 +480,52 @@ function(ggml_add_cpu_backend_variant tag_name)
     ggml_add_cpu_backend_variant_impl(${tag_name})
 endfunction()
 
+# ============================================================
+# X79 / C600 / Ivy Bridge-EP specialization
+# ============================================================
+if (GGML_SYSTEM_ARCH STREQUAL "x86")
+    # The upstream Vulkan workflow enables all CPU variants.
+    # This fork is intentionally single-target: Ivy Bridge-EP.
+    set(GGML_CPU_ALL_VARIANTS OFF CACHE BOOL
+        "ggml: build all variants of the CPU backend" FORCE)
+
+    set(GGML_NATIVE OFF CACHE BOOL
+        "ggml: optimize the build for the current system" FORCE)
+
+    set(GGML_SSE42 ON CACHE BOOL
+        "ggml: enable SSE 4.2" FORCE)
+
+    set(GGML_AVX ON CACHE BOOL
+        "ggml: enable AVX" FORCE)
+
+    set(GGML_F16C ON CACHE BOOL
+        "ggml: enable F16C" FORCE)
+
+    set(GGML_AVX2 OFF CACHE BOOL
+        "ggml: enable AVX2" FORCE)
+
+    set(GGML_FMA OFF CACHE BOOL
+        "ggml: enable FMA" FORCE)
+
+    set(GGML_BMI2 OFF CACHE BOOL
+        "ggml: enable BMI2" FORCE)
+
+    set(GGML_AVX512 OFF CACHE BOOL
+        "ggml: enable AVX512F" FORCE)
+
+    set(GGML_AVX512_VBMI OFF CACHE BOOL
+        "ggml: enable AVX512-VBMI" FORCE)
+
+    set(GGML_AVX512_VNNI OFF CACHE BOOL
+        "ggml: enable AVX512-VNNI" FORCE)
+
+    set(GGML_AVX512_BF16 OFF CACHE BOOL
+        "ggml: enable AVX512-BF16" FORCE)
+
+    message(STATUS "X79/C600 optimization: forcing Ivy Bridge-EP CPU configuration")
+endif()
+
+
 ggml_add_backend(CPU)
 
 if (GGML_CPU_ALL_VARIANTS)
