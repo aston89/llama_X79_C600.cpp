@@ -639,6 +639,7 @@ if (GGML_SYSTEM_ARCH STREQUAL "x86" AND TARGET ggml-cpu)
             -O3
             -fomit-frame-pointer
             -ffast-math
+            -fno-finite-math-only
         )
         message(STATUS "X79/C600 CPU tuning: -march=ivybridge -mtune=ivybridge -O3 -fomit-frame-pointer -ffast-math")
     endif()
