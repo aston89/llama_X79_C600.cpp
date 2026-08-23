@@ -4204,20 +4204,20 @@ static void ggml_vk_load_shaders(vk_device& device, vk_pipeline requested) {
 
     if (device->coopmat2) {
         // spec constants and tile sizes for non-quant matmul/matmul_id
-        l_warptile = { 256, 128, 256, 64, 1 };
-        m_warptile = { 256, 128, 128, 64, 0 };
-        s_warptile = { 128,  64,  64, 64, 0 };
-        l_wg_denoms = {128, 256, 1 };
-        m_wg_denoms = {128, 128, 1 };
-        s_wg_denoms = { 64,  64, 1 };
+        l_warptile = { 128, 128, 256, 32, 1 };
+        m_warptile = { 128, 128, 256, 32, 0 };
+        s_warptile = { 128, 128, 256, 32, 0 };
+        l_wg_denoms = {128, 256, 1};
+        m_wg_denoms = {128, 256, 1};
+        s_wg_denoms = {128, 256, 1};
 
         // spec constants and tile sizes for quant matmul (non-Qi_K)
-        l_warptile_mmq = { 256, 128, 256, 64, 1 };
-        m_warptile_mmq = { 256, 128, 128, 64, 1 };
-        s_warptile_mmq = { 256, 32,  64, 128, 0 };
+        l_warptile_mmq = { 128, 128, 256, 32, 1 };
+        m_warptile_mmq = { 128, 128, 256, 32, 1 };
+        s_warptile_mmq = { 128, 128, 256, 32, 0 };
         l_mmq_wg_denoms = { 128, 256, 1 };
-        m_mmq_wg_denoms = { 128, 128, 1 };
-        s_mmq_wg_denoms = { 32,  64,  1 };
+        m_mmq_wg_denoms = { 128, 256, 1 };
+        s_mmq_wg_denoms = { 128, 256, 1 };
 
         // spec constants and tile sizes for quant matmul (Qi_K)
         l_warptile_mmq_k = { 256, 128, 256, 64, 1 };
@@ -4225,7 +4225,7 @@ static void ggml_vk_load_shaders(vk_device& device, vk_pipeline requested) {
         s_warptile_mmq_k = { 256, 32,  64, 128, 0 };
         l_mmq_wg_denoms_k = { 128, 256, 1 };
         m_mmq_wg_denoms_k = { 128, 128, 1 };
-        s_mmq_wg_denoms_k = { 32,  64,  1 };
+        s_mmq_wg_denoms_k = { 32,  64, 1 };
 
         // spec constants and tile sizes for quant matmul_id
         const uint32_t mmqid_bk = device->coopmat2_decode_vector ? 64u : 32u;
@@ -4237,8 +4237,8 @@ static void ggml_vk_load_shaders(vk_device& device, vk_pipeline requested) {
         s_mmqid_wg_denoms = { 128, 64, 1 };
 
         l_align = 128;
-        m_align =  64;
-        s_align =  32;
+        m_align = 64;
+        s_align = 32;
     } else {
         // Matrix cores require different warp group sizes
         const uint32_t tm_l = device->coopmat_support ? device->coopmat_m : 4;
