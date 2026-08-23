@@ -1,3 +1,87 @@
+```python
+name: CI (vulkan)
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GGML_NLOOP: 3
+  GGML_N_THREADS: 1
+  LLAMA_ARG_LOG_COLORS: 1
+  LLAMA_ARG_LOG_PREFIX: 1
+  LLAMA_ARG_LOG_TIMESTAMPS: 1
+
+jobs:
+  windows:
+    runs-on: windows-2025
+
+    env:
+      VULKAN_VERSION: 1.4.357.0
+
+    steps:
+      - name: Clone
+        id: checkout
+        uses: actions/checkout@v6
+
+      - name: ccache
+        uses: ggml-org/ccache-action@v1.2.21
+        with:
+          key: cpu-windows-2025-x64-vulkan
+          variant: ccache
+          evict-old-files: 1d
+          save: false
+
+      - name: Install Vulkan SDK
+        id: get_vulkan
+        shell: pwsh
+        run: |
+          curl.exe `
+            -o "$env:RUNNER_TEMP/VulkanSDK-Installer.exe" `
+            -L "https://sdk.lunarg.com/sdk/download/${env:VULKAN_VERSION}/windows/vulkansdk-windows-X64-${env:VULKAN_VERSION}.exe"
+
+          & "$env:RUNNER_TEMP\VulkanSDK-Installer.exe" `
+            --accept-licenses `
+            --default-answer `
+            --confirm-command `
+            install
+
+          Add-Content $env:GITHUB_ENV "VULKAN_SDK=C:\VulkanSDK\${env:VULKAN_VERSION}"
+          Add-Content $env:GITHUB_PATH "C:\VulkanSDK\${env:VULKAN_VERSION}\bin"
+
+      - name: Install Ninja
+        id: install_ninja
+        shell: pwsh
+        run: |
+          choco install ninja -y
+
+      - name: Build
+        id: cmake_build
+        shell: pwsh
+        run: |
+          cmake -S . -B build -G "Ninja Multi-Config" `
+            -D CMAKE_TOOLCHAIN_FILE=cmake/x64-windows-llvm.cmake `
+            -D CMAKE_BUILD_TYPE=Release `
+            -D GGML_NATIVE=OFF `
+            -D LLAMA_BUILD_SERVER=ON `
+            -D GGML_RPC=ON `
+            -D GGML_BACKEND_DL=ON `
+            -D GGML_CPU_ALL_VARIANTS=ON `
+            -D GGML_VULKAN=ON `
+            -D LLAMA_BUILD_BORINGSSL=ON
+
+          cmake --build build --config Release -j $env:NUMBER_OF_PROCESSORS
+
+      - name: Test
+        id: cmake_test
+        shell: pwsh
+        run: |
+          Set-Location build
+          ctest -L main -C Release --verbose --timeout 900
+```
 name: CI (vulkan)
 
 on:
