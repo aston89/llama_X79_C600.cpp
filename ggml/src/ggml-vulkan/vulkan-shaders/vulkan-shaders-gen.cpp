@@ -33,6 +33,11 @@
 
 #define ASYNCIO_CONCURRENCY 64
 
+// X79/C600 Vulkan build: hard-target NVIDIA Ampere / RTX 3070.
+// Keep generic shaders for non-matmul operations, but generate matmul
+// families through NV_coopmat2 when the SDK supports it.
+#define GGML_VULKAN_X79_AMPERE_ONLY 1
+
 std::mutex lock;
 std::vector<std::pair<std::string, std::string>> shader_fnames;
 // Set when any shader subprocess fails (non-zero exit / stderr / launch failure) so the
@@ -632,33 +637,30 @@ void matmul_shaders(bool fp16, MatMulIdType matmul_id_type, bool coopmat, bool c
 
 void process_shaders() {
     // matmul
-    for (const MatMulIdType& matmul_id_type : {MatMulIdType::NONE, MatMulIdType::DEFAULT, MatMulIdType::SUBGROUP}) {
-        // No coopmats
-        // fp32
-        matmul_shaders(false, matmul_id_type, false, false, false);
+    //
+    // X79/C600 NVIDIA Ampere hardening:
+    // RTX 3070 exposes NV_coopmat2, so for matmul we intentionally generate
+    // the NV_coopmat2 path instead of carrying the generic/KHR matmul zoo.
+    // Non-matmul shaders below remain unchanged.
+for (const MatMulIdType& matmul_id_type : {MatMulIdType::NONE, MatMulIdType::DEFAULT, MatMulIdType::SUBGROUP}) {
 
-        // fp16, fp32acc and fp16acc
+    if (matmul_id_type == MatMulIdType::DEFAULT) {
         matmul_shaders(true, matmul_id_type, false, false, false);
         matmul_shaders(true, matmul_id_type, false, false, true);
-
-        // dot2 variants (scalar fp16 only)
-        matmul_shaders(true, matmul_id_type, false, false, false, true);
-        matmul_shaders(true, matmul_id_type, false, false, true,  true);
-
-        if (matmul_id_type != MatMulIdType::DEFAULT) {
-#if defined(GGML_VULKAN_COOPMAT_GLSLC_SUPPORT)
-            // Coopmat, fp32acc and fp16acc
-            matmul_shaders(true, matmul_id_type, true, false, false);
-            matmul_shaders(true, matmul_id_type, true, false, true);
-#endif
+        continue;
+    }
 
 #if defined(GGML_VULKAN_COOPMAT2_GLSLC_SUPPORT)
-            // Coopmat2, fp32acc and fp16acc
-            matmul_shaders(true, matmul_id_type, false, true, false);
-            matmul_shaders(true, matmul_id_type, false, true, true);
+
+    matmul_shaders(true, matmul_id_type, false, true, false);
+    matmul_shaders(true, matmul_id_type, false, true, true);
+
+#else
+
+#error "X79/C600 Ampere build requires Vulkan NV_coopmat2 shader support"
+
 #endif
-        }
-    }
+}
 
     for (const bool& fp16 : {false, true}) {
         std::map<std::string, std::string> base_dict;
