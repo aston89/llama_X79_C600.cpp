@@ -528,6 +528,20 @@ endif()
 
 ggml_add_backend(CPU)
 
+# X79 / C600 / Ivy Bridge-EP compiler tuning
+if (GGML_SYSTEM_ARCH STREQUAL "x86" AND TARGET ggml-cpu)
+    if (CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+        target_compile_options(ggml-cpu PRIVATE
+            -march=ivybridge
+            -mtune=ivybridge
+            -O3
+            -fomit-frame-pointer
+            -ffast-math
+        )
+        message(STATUS "X79/C600 CPU tuning: -march=ivybridge -mtune=ivybridge -O3 -fomit-frame-pointer -ffast-math")
+    endif()
+endif()
+
 if (GGML_CPU_ALL_VARIANTS)
     if (NOT GGML_BACKEND_DL)
         message(FATAL_ERROR "GGML_CPU_ALL_VARIANTS requires GGML_BACKEND_DL")
