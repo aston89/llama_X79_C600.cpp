@@ -81,3 +81,26 @@ jobs:
           Set-Location build
           ctest -L main -C Release --verbose --timeout 900
 
+      - name: Package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+
+          Copy-Item `
+            "build/bin/Release/*" `
+            "dist/" `
+            -Recurse `
+            -Force
+
+          Compress-Archive `
+            -Path "dist/*" `
+            -DestinationPath "x79-c600-vulkan-ivy-windows-x64.zip" `
+            -Force
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: x79-c600-vulkan-ivy-vulkan
+          path: x79-c600-vulkan-ivy-windows-x64.zip
+          if-no-files-found: error
+
