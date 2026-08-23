@@ -1,12 +1,12 @@
-name: Build Vulkan X79/C600 Ivy Bridge
+name: build vulkan ivy-bridge-x79-c600.yml
 
 on:
   workflow_dispatch:
     inputs:
       commit_hash:
-        description: Optional commit hash/ref to build from
+        description: 'Optional commit hash/ref to build from'
         required: false
-        default: ""
+        default: ''
 
 concurrency:
   group: x79-vulkan-${{ github.ref }}
