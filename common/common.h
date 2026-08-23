@@ -68,7 +68,7 @@ struct common_cpu_params {
     int      n_threads                   = -1;
     bool     cpumask[GGML_MAX_N_THREADS] = {false}; // CPU affinity mask.
     bool     mask_valid                  = false;   // Default: any CPU
-    enum ggml_sched_priority  priority   = GGML_SCHED_PRIO_NORMAL;  // Scheduling prio : (0 - normal, 1 - medium, 2 - high, 3 - realtime)
+    enum ggml_sched_priority priority = GGML_SCHED_PRIO_MEDIUM; // X79/C600: NVIDIA Vulkan CPU dispatch priority
     bool     strict_cpu                  = false;   // Use strict CPU placement
     uint32_t poll                        = 50;      // Polling (busywait) level (0 - no polling, 100 - mostly polling)
 };
