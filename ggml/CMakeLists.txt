@@ -121,7 +121,7 @@ endif()
 # general
 option(GGML_STATIC "ggml: static link libraries"                     OFF)
 option(GGML_NATIVE "ggml: optimize the build for the current system" ${GGML_NATIVE_DEFAULT})
-option(GGML_LTO    "ggml: enable link time optimization"             OFF)
+option(GGML_LTO    "ggml: enable link time optimization"             ON)
 option(GGML_CCACHE "ggml: use ccache if available"                   ON)
 
 # debug
