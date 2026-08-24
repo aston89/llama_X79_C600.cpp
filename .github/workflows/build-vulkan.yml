@@ -100,7 +100,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v6
         with:
-          name: x79-c600-vulkan-ivy-vulkan
-          path: x79-c600-vulkan-ivy-windows-x64.zip
+          name: ci-vulkan-win-x64-x79-c600-ivy-bridge
+          path: ci-vulkan-win-x64-x79-c600-ivy-bridge.zip
           if-no-files-found: error
 
