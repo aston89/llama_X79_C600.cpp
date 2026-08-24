@@ -94,7 +94,9 @@ jobs:
           path: llama-win-x64-x79-c600-cuda-12.4-sm86-hardened.zip
           if-no-files-found: error
 
-      - name: ccache-clear
-        uses: ./.github/actions/ccache-clear
+      - name: Upload artifact
+        uses: actions/upload-artifact@v6
         with:
-          key: x79-c600-windows-2022-x64-cuda-12.4-sm86
+          name: llama-win-x64-x79-c600-cuda-12.4-sm86-hardened
+          path: x79-c600-cuda-12.4-sm86-windows-x64.zip
+          if-no-files-found: error
