@@ -100,5 +100,5 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: llama-win-x64-x79-c600-ivy-vulkan-hardened
-          path: llama-win-x64-x79-c600-ivy-vulkan-hardened.zip
+          path: x79-c600-vulkan-ivy-windows-x64.zip
           if-no-files-found: error
