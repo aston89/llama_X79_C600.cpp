@@ -68,7 +68,6 @@ jobs:
             -D LLAMA_BUILD_SERVER=ON `
             -D GGML_RPC=ON `
             -D GGML_BACKEND_DL=ON `
-            -D GGML_CPU_ALL_VARIANTS=ON `
             -D GGML_VULKAN=ON `
             -D LLAMA_BUILD_BORINGSSL=ON
 
