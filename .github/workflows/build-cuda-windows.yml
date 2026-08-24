@@ -1,4 +1,4 @@
-name: CI (CUDA, win-x64) x79-c600 ivy-bridge rtx-ampere
+name: CI (CUDA, win-x64) x79-c600 ivy-bridge cuda12.4 sm86
 
 on:
   workflow_dispatch:
