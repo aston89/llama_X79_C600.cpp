@@ -436,6 +436,19 @@ if (MSVC)
         if(TARGET ${target_name})
             target_compile_options(${target_name} PRIVATE ${MSVC_WARNING_FLAGS})
             target_compile_options(${target_name} PRIVATE ${MSVC_COMPILE_OPTIONS})
+
+            # Aggressive MSVC optimization profile for x64 Intel CPU builds.
+            # The actual ISA restriction (/arch:AVX) and GGML_F16C definition
+            # are configured in ggml/src/ggml-cpu/CMakeLists.txt.
+            if (target_name STREQUAL "ggml-cpu")
+                target_compile_options(${target_name} PRIVATE
+                    /O2
+                    /Ob3
+                    /Oi
+                    /fp:fast
+                    /favor:INTEL64
+                )
+            endif()
         endif()
     endfunction()
 
