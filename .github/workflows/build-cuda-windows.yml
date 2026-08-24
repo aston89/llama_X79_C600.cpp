@@ -1,4 +1,4 @@
-name: CI (CUDA, win-x64) x79-c600 ivy-bridge
+name: CI (CUDA, win-x64) x79-c600 ivy-bridge rtx-ampere
 
 on:
   workflow_dispatch:
@@ -90,8 +90,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v6
         with:
-          name: x79-c600-cuda-12.4-sm86-windows-x64
-          path: x79-c600-cuda-12.4-sm86-windows-x64.zip
+          name: llama-win-x64-x79-c600-cuda-12.4-sm86-hardened
+          path: llama-win-x64-x79-c600-cuda-12.4-sm86-hardened.zip
           if-no-files-found: error
 
       - name: ccache-clear
