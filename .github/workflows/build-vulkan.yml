@@ -1,4 +1,4 @@
-name: CI (vulkan)
+name: CI (vulkan) x79-c600 ivy-bridge
 
 on:
   workflow_dispatch:
